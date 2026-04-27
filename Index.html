@@ -1,0 +1,787 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Máximo Respeito | Barbearia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #141414;
+      --gold: #C9A84C;
+      --gold-dark: #a5873a;
+      --white: #F5F5F5;
+      --white-off: #e0e0e0;
+      --gray: #2a2a2a;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg);
+      color: var(--white);
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* textura sutil de fundo */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" opacity="0.03"><path fill="none" d="M0,0 L400,0 L400,300 L0,300 Z" stroke="%23C9A84C" stroke-width="0.5"/><path d="M50,30 L100,30 M50,60 L120,60 M30,100 L200,100" stroke="%23C9A84C" stroke-width="0.3"/><circle cx="320" cy="220" r="40" stroke="%23C9A84C" stroke-width="0.3" fill="none"/></svg>');
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* navbar */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      transition: box-shadow 0.3s, background 0.2s;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+    }
+    nav.scrolled {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      background: #0a0a0af2;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+    }
+    .logo span {
+      color: var(--white);
+      font-weight: 400;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+      letter-spacing: 0.5px;
+    }
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+    .hamburger {
+      display: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: var(--gold);
+    }
+
+    /* Container geral */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2);
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--gold);
+      position: relative;
+    }
+    .section-title:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 2px;
+      background: var(--gold);
+      margin: 0.8rem auto 0;
+    }
+
+    /* hero com nova imagem de fundo (mármore preto) */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.75)), url('https://img.freepik.com/fotos-gratis/papel-de-parede-de-barbeiro-fundo-de-marmore-preto_53876-145654.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding-top: 80px;
+    }
+    .hero-content {
+      max-width: 700px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .hero h1 .gold {
+      color: var(--gold);
+    }
+    .hero p {
+      font-size: 1.3rem;
+      margin: 1rem 0 2rem;
+      color: #ddd;
+    }
+    .btn-gold {
+      display: inline-block;
+      background: var(--gold);
+      color: #111;
+      padding: 0.9rem 2.2rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 40px;
+      transition: all 0.3s;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-gold:hover {
+      background: #b8923a;
+      transform: scale(1.02);
+      box-shadow: 0 0 12px rgba(201,168,76,0.4);
+    }
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: white;
+      padding: 0.9rem 2rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 40px;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+    .btn-whatsapp:hover {
+      background: #128C7E;
+      transform: scale(1.02);
+    }
+    .btn-instagram {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(45deg, #f09433, #d62976, #962fbf);
+      color: white;
+      padding: 0.9rem 2rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 40px;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+    .btn-instagram:hover {
+      transform: scale(1.02);
+      opacity: 0.95;
+    }
+    .buttons-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* cards serviços */
+    .cards-grid, .team-grid, .depoimentos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 1.8rem;
+      text-align: center;
+      transition: all 0.3s;
+      border: 1px solid #2a2a2a;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.5);
+    }
+    .card i {
+      font-size: 2.8rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+    }
+    .preco {
+      color: var(--gold);
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: 0.8rem 0;
+    }
+
+    /* galeria carrossel - menor e automático */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 20px;
+      margin-top: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+    .carousel-slide {
+      min-width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #1e1e1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--gold);
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+    }
+    .carousel-slide span {
+      background: rgba(0,0,0,0.6);
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      color: var(--gold);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 10;
+      transition: 0.2s;
+    }
+    .carousel-btn:hover {
+      background: var(--gold);
+      color: #111;
+    }
+    .carousel-btn.prev { left: 15px; }
+    .carousel-btn.next { right: 15px; }
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: #555;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .dot.active {
+      background: var(--gold);
+    }
+
+    /* equipe - apenas nome e foto, sem descrição */
+    .team-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid #2a2a2a;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .team-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+    }
+    .team-img {
+      height: 280px;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .team-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin: 1rem 0 1rem 0;
+      color: var(--gold);
+    }
+
+    /* depoimentos com estrelas */
+    .depoimento-card {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      border-radius: 20px;
+    }
+    .stars {
+      color: var(--gold);
+      margin: 0.8rem 0;
+    }
+    .cliente-nome {
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    /* contato com dois botões */
+    .contato-wpp {
+      text-align: center;
+      background: #111;
+      padding: 2rem;
+      border-radius: 28px;
+      margin-top: 1rem;
+    }
+    .contato-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .btn-wpp-large, .btn-ig-large {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .btn-wpp-large {
+      background: #25D366;
+      color: white;
+    }
+    .btn-wpp-large:hover {
+      background: #128C7E;
+      transform: scale(1.03);
+    }
+    .btn-ig-large {
+      background: linear-gradient(45deg, #f09433, #d62976, #962fbf);
+      color: white;
+    }
+    .btn-ig-large:hover {
+      transform: scale(1.03);
+      opacity: 0.95;
+    }
+
+    /* localização */
+    .contato-info {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .info-item {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .info-item i {
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+    .social-links a {
+      color: var(--white);
+      font-size: 1.6rem;
+      margin-right: 1rem;
+      transition: color 0.2s;
+    }
+    .social-links a:hover {
+      color: var(--gold);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #050505;
+      font-size: 0.8rem;
+    }
+
+    /* seção avaliações extras */
+    .add-review {
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 20px;
+      margin: 2rem 0;
+    }
+    @media (max-width: 800px) {
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: #0a0a0a;
+        flex-direction: column;
+        padding: 2rem;
+        text-align: center;
+        gap: 1.5rem;
+        border-bottom: 1px solid var(--gold);
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .hamburger {
+        display: block;
+      }
+      .hero-content {
+        text-align: center;
+      }
+      .section-title {
+        font-size: 2rem;
+      }
+      .carousel-container {
+        max-width: 100%;
+      }
+      .buttons-group {
+        justify-content: center;
+      }
+      .team-img {
+        height: 220px;
+      }
+      .hero {
+        background-attachment: scroll;
+      }
+    }
+    .anima {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .anima.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    button {
+      background: none;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="logo">Máximo<span>Respeito</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#equipe">Equipe</a></li>
+    <li><a href="#depoimentos">Depoimentos</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger"><i class="fas fa-scissors"></i></div>
+</nav>
+
+<main>
+  <!-- Hero com nova imagem de fundo (mármore preto) -->
+  <section id="home" class="hero">
+    <div class="container hero-content">
+      <h1>MÁXIMO <span class="gold">RESPEITO</span></h1>
+      <p>Onde o estilo começa</p>
+      <div class="buttons-group">
+        <a href="https://wa.me/5521998488629?text=Olá! Gostaria de agendar um horário na barbearia." target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+        <a href="https://www.instagram.com/maximorespeitobarbershop/" target="_blank" class="btn-instagram"><i class="fab fa-instagram"></i> Instagram</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre -->
+  <section id="sobre" class="anima">
+    <div class="container">
+      <h2 class="section-title">Sobre Nós</h2>
+      <div style="max-width: 800px; margin: 0 auto; text-align: center; background: #111; padding: 2rem; border-radius: 24px;">
+        <p style="font-size: 1.1rem;">A Barbearia Máximo Respeito nasceu da tradição das velhas barbearias e da atitude contemporânea. Aqui, cada corte é uma obra de arte e cada cliente encontra ambiente sofisticado, atendimento de primeira e respeito acima de tudo. Profissionais dedicados a realçar o seu estilo com excelência.</p>
+        <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+          <div><i class="fas fa-cut" style="color: var(--gold);"></i> <strong>Tradição e Estilo</strong></div>
+          <div><i class="fas fa-star" style="color: var(--gold);"></i> <strong>Atendimento Premium</strong></div>
+          <div><i class="fas fa-users" style="color: var(--gold);"></i> <strong>Ambiente Acolhedor</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Serviços -->
+  <section id="servicos" class="anima">
+    <div class="container">
+      <h2 class="section-title">Nossos Serviços</h2>
+      <div class="cards-grid">
+        <div class="card"><i class="fas fa-cut"></i><h3>Corte Masculino</h3><div class="preco">R$ 45,00</div><p>Estilos clássicos e modernos</p></div>
+        <div class="card"><i class="fas fa-beard"></i><h3>Barba</h3><div class="preco">R$ 35,00</div><p>Modelagem e toalha quente</p></div>
+        <div class="card"><i class="fas fa-eye"></i><h3>Sobrancelha</h3><div class="preco">R$ 20,00</div><p>Design e acabamento</p></div>
+        <div class="card"><i class="fas fa-hand-holding-water"></i><h3>Hidratação Capilar</h3><div class="preco">R$ 50,00</div><p>Tratamento revitalizante</p></div>
+        <div class="card"><i class="fas fa-gem"></i><h3>Combo (Corte + Barba)</h3><div class="preco">R$ 70,00</div><p>Pacote completo</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galeria com Carrossel automático -->
+  <section id="galeria" class="anima">
+    <div class="container">
+      <h2 class="section-title">Galeria de Cortes</h2>
+      <div class="carousel-container">
+        <div class="carousel-track" id="carouselTrack">
+          <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); background-size: cover;"><span>Corte Degradê</span></div>
+          <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); background-size: cover;"><span>Navalhado</span></div>
+          <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); background-size: cover;"><span>Barba Gigante</span></div>
+          <div class="carousel-slide" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1503951914875-3fe36c2fd069?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); background-size: cover;"><span>Estilo Vintage</span></div>
+        </div>
+        <button class="carousel-btn prev" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-btn next" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+      </div>
+      <div class="dots" id="dotsContainer"></div>
+    </div>
+  </section>
+
+  <!-- Equipe - apenas nome e foto -->
+  <section id="equipe" class="anima">
+    <div class="container">
+      <h2 class="section-title">Nossa Equipe</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-img" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://randomuser.me/api/portraits/men/32.jpg'); background-size: cover; background-position: center;"></div>
+          <h3>Raphael</h3>
+        </div>
+        <div class="team-card">
+          <div class="team-img" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://randomuser.me/api/portraits/men/45.jpg'); background-size: cover; background-position: center;"></div>
+          <h3>Canela</h3>
+        </div>
+        <div class="team-card">
+          <div class="team-img" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://randomuser.me/api/portraits/men/22.jpg'); background-size: cover; background-position: center;"></div>
+          <h3>Lume</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Depoimentos + espaço para avaliações de clientes -->
+  <section id="depoimentos" class="anima">
+    <div class="container">
+      <h2 class="section-title">O que nossos clientes dizem</h2>
+      <div class="depoimentos-grid" id="depoimentosGrid">
+        <div class="depoimento-card"><i class="fas fa-quote-left" style="color: var(--gold);"></i><p>"Ambiente impecável, cortes de altíssimo nível. O respeito é real!"</p><div class="stars">★★★★★</div><div class="cliente-nome">- João V.</div></div>
+        <div class="depoimento-card"><i class="fas fa-quote-left" style="color: var(--gold);"></i><p>"Melhor barbearia da região, equipe atenciosa e preço justo."</p><div class="stars">★★★★★</div><div class="cliente-nome">- Mariana A.</div></div>
+        <div class="depoimento-card"><i class="fas fa-quote-left" style="color: var(--gold);"></i><p>"Fui atendido pelo Raphael, simplesmente fantástico. Voltarei sempre!"</p><div class="stars">★★★★★</div><div class="cliente-nome">- Carlos F.</div></div>
+      </div>
+
+      <!-- Seção para adicionar nova avaliação -->
+      <div class="add-review">
+        <h3 style="color: var(--gold);">Deixe sua avaliação</h3>
+        <div style="display: flex; gap: 0.5rem; margin: 1rem 0; justify-content: center;">
+          <span class="star-rating" data-value="1">★</span><span class="star-rating" data-value="2">★</span><span class="star-rating" data-value="3">★</span><span class="star-rating" data-value="4">★</span><span class="star-rating" data-value="5">★</span>
+        </div>
+        <input type="text" id="reviewName" placeholder="Seu nome" style="background:#1e1e1e; border:1px solid #333; padding:0.7rem; width: 70%; border-radius: 30px; margin-bottom: 10px; color:white;">
+        <textarea id="reviewText" placeholder="Sua experiência..." rows="2" style="background:#1e1e1e; border:1px solid #333; width: 70%; border-radius: 16px; padding: 0.7rem; color:white;"></textarea>
+        <button id="addReviewBtn" class="btn-gold" style="display: block; margin: 10px auto;">Enviar Avaliação</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contato via WhatsApp e Instagram -->
+  <section id="contato" class="anima">
+    <div class="container">
+      <h2 class="section-title">Localização & Contato</h2>
+      <div class="contato-info">
+        <div class="info-item"><i class="fas fa-map-marker-alt"></i><span>Rua Belvedere 58, Tijuca - RJ</span></div>
+        <div class="info-item"><i class="fas fa-clock"></i><span>Terça a Domingo: 09h - 20h</span></div>
+        <div class="info-item"><i class="fab fa-whatsapp"></i><span>(21) 99848-8629</span></div>
+        <div class="info-item"><i class="fab fa-instagram"></i><span>@maximorespeitobarbershop</span></div>
+      </div>
+      <div class="contato-wpp">
+        <p style="margin-bottom: 1rem;">Fale conosco ou acompanhe nosso trabalho nas redes sociais!</p>
+        <div class="contato-buttons">
+          <a href="https://wa.me/5521998488629?text=Olá! Gostaria de informações sobre os serviços da barbearia." target="_blank" class="btn-wpp-large">
+            <i class="fab fa-whatsapp fa-2x"></i> WhatsApp
+          </a>
+          <a href="https://www.instagram.com/maximorespeitobarbershop/" target="_blank" class="btn-ig-large">
+            <i class="fab fa-instagram fa-2x"></i> Instagram
+          </a>
+        </div>
+      </div>
+      <div class="social-links" style="text-align: center; margin-top: 2rem;">
+        <a href="https://www.instagram.com/maximorespeitobarbershop/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/5521998488629" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 Máximo Respeito Barbearia - Onde o estilo começa. Todos os direitos reservados.</p>
+  <p style="margin-top: 8px;">
+    <a href="#home" style="color: var(--gold);">Início</a> | 
+    <a href="#servicos" style="color: var(--gold);">Serviços</a> | 
+    <a href="https://www.instagram.com/maximorespeitobarbershop/" target="_blank" style="color: var(--gold);">Instagram</a> | 
+    <a href="https://wa.me/5521998488629" target="_blank" style="color: var(--gold);">WhatsApp</a>
+  </p>
+</footer>
+
+<script>
+  // Navbar shadow + menu mobile
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if(window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll suave
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if(href === "#") return;
+      const target = document.querySelector(href);
+      if(target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+
+  // animação ao scroll
+  const animElements = document.querySelectorAll('.anima');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.2 });
+  animElements.forEach(el => observer.observe(el));
+
+  // Carrossel automático + manual
+  const track = document.getElementById('carouselTrack');
+  const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('dotsContainer');
+  let currentIndex = 0;
+  const total = slides.length;
+  let autoInterval;
+
+  function updateCarousel() {
+    track.style.transform = `translateX(-${currentIndex * 100}%)`;
+    document.querySelectorAll('.dot').forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentIndex);
+    });
+  }
+  
+  function createDots() {
+    dotsContainer.innerHTML = '';
+    for(let i=0; i<total; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if(i===0) dot.classList.add('active');
+      dot.addEventListener('click', () => {
+        currentIndex = i;
+        updateCarousel();
+        resetAutoPlay();
+      });
+      dotsContainer.appendChild(dot);
+    }
+  }
+  
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % total;
+    updateCarousel();
+  }
+  
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + total) % total;
+    updateCarousel();
+  }
+  
+  function startAutoPlay() {
+    autoInterval = setInterval(nextSlide, 4000);
+  }
+  
+  function resetAutoPlay() {
+    clearInterval(autoInterval);
+    startAutoPlay();
+  }
+  
+  prevBtn.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+  nextBtn.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+  
+  createDots();
+  startAutoPlay();
+
+  // Sistema de avaliações (clientes)
+  let starRating = 5;
+  document.querySelectorAll('.star-rating').forEach(star => {
+    star.addEventListener('click', function() {
+      starRating = parseInt(this.dataset.value);
+      document.querySelectorAll('.star-rating').forEach(s => s.style.color = '#555');
+      for(let i=1; i<=starRating; i++) document.querySelector(`.star-rating[data-value='${i}']`).style.color = '#C9A84C';
+    });
+  });
+  
+  document.getElementById('addReviewBtn').addEventListener('click', () => {
+    const name = document.getElementById('reviewName').value.trim();
+    const text = document.getElementById('reviewText').value.trim();
+    if(!name || !text) { alert("Preencha nome e avaliação"); return; }
+    const starsDisplay = '★'.repeat(starRating) + '☆'.repeat(5-starRating);
+    const newReview = document.createElement('div');
+    newReview.className = 'depoimento-card';
+    newReview.innerHTML = `<i class="fas fa-quote-left" style="color: var(--gold);"></i><p>"${text.replace(/</g, '&lt;')}"</p><div class="stars">${starsDisplay}</div><div class="cliente-nome">- ${name.replace(/</g, '&lt;')}</div>`;
+    document.getElementById('depoimentosGrid').appendChild(newReview);
+    document.getElementById('reviewName').value = '';
+    document.getElementById('reviewText').value = '';
+    starRating = 5;
+    document.querySelectorAll('.star-rating').forEach(s => s.style.color = '#C9A84C');
+    alert("Avaliação adicionada! Obrigado.");
+  });
+  
+  document.querySelectorAll('.star-rating').forEach(s => s.style.color = '#C9A84C');
+</script>
+</body>
+</html>
+```
